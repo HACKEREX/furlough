@@ -1,0 +1,87 @@
+<div *ngIf="!monthlyView">
+
+  <div class="command-view">
+    <mat-select [(value)]="inputParameters.TYPE" placeholder="INPUT TYPE">
+      <mat-option value={{0}}>YEARLY</mat-option>
+      <mat-option value={{1}}>QUATERLY</mat-option>
+      <mat-option value={{2}}>MONTHLY</mat-option>
+    </mat-select>
+    <mat-select [(value)]="inputParameters.YEAR" placeholder="YEAR">
+      <mat-option *ngFor="let year of yearList" value={{year}} >{{ year }}</mat-option>
+    </mat-select>
+    <mat-select [(value)]="inputParameters.MONTH" placeholder="MONTH">
+      <mat-option *ngFor="let month of monthHeaders" value={{monthHeadersMap[month]}} >{{ month }}</mat-option>
+    </mat-select>
+    <button class='command-view-button' type="button" (click)="fetchDetails()">FETCH</button>
+  </div>
+
+  <table class="report-view">
+    <tr>
+      <th>MSID</th>
+      <th>NAME</th>
+      <th class='report-view-column-header' *ngFor="let headers of dataHeaders;let i=index" (click)="handleMonthView(headers)">
+        <table class="table-inner" (click)="handleMonthView(i)">
+          <tr *ngIf="dataHedersToShow[i]" class="tr-outer">{{ headers | formatMonth }}</tr>
+          <tr *ngIf="dataHedersToShow[i]">
+            PL | OV
+          </tr>
+        </table>
+      </th>
+      <th class="report-view-column-header"><table><tr><td>P</td><td>O</td></tr></table></th>
+      <th class="report-view-column-header">TOT</th>
+      <th>
+        <button class="report-view-column-header-navigation" (click)="handleLeftClick()"><</button><button class="report-view-column-header-navigation" (click)="handleRightClick()">></button>
+      </th>
+    </tr>
+    <tr class="tr-outer" *ngFor="let msid of uniqueMsid">
+      <td class="td-outer">{{ responseDataL3[msid].MSID }}</td>
+      <td class="td-outer">{{ responseDataL3[msid].NAME }}</td>
+      <td class="td-outer" *ngFor="let view of responseDataL3[msid].VIEW;let i=index;">
+        <span *ngIf="dataHedersToShow[i]">{{view.REPORT | countPlannedFurlough }}     {{ view.REPORT | countOverlappedFurlough}}</span>
+      </td>
+      <td class=" total-pl-table">{{ this | lossCalculator:msid }}</td>
+      <td [id]="calculateId(0,msid)" class="total-loss-table">{{ this | lossCalculator:'ALL' }}</td>
+    </tr>
+  </table>
+
+  <div *ngIf="noData" class="data-info">
+    <p>No Data Found For Date Range {{startDate}} and {{ endDate }}</p>
+  </div>
+</div>
+
+<div *ngIf="monthlyView">
+  <div class="command-view">
+    <p class="data-info"> Showing Data For Month {{ monthHeaders[inputParameters.MONTH]  }}  {{ inputParameters.YEAR }}</p>
+    <button class="command-view-button" (click)="handleBack()">BACK</button>
+  </div>
+  <div class="report-view">
+    <table class="report-view">
+      <tr>
+        <th>MSID</th>
+        <th>NAME</th>
+        <th class="report-view-column-header" *ngFor="let days of inputParameters.MONTH_VIEW.NO_OF_DAYS_ARRAY">{{ days }}</th>
+        <th class="report-view-column-header">
+          <table>
+            <tr>
+              <td>P</td><td>O</td>
+            </tr>
+          </table>
+        </th>
+        <th class="report-view-column-header">TOT</th>
+        <th>
+          <button class="report-view-column-header-navigation" (click)="handleLeftClick()"><</button><button class="report-view-column-header-navigation" (click)="handleRightClick()">></button>
+        </th>
+      </tr>
+      <tr class="tr-outer" *ngFor="let msid of uniqueMsid; let i=index;">
+        <td class="td-outer">{{ responseDataL3[msid].MSID }}</td>
+        <td class="td-outer">{{ responseDataL3[msid].NAME }}</td>
+        <td class="td-outer" *ngFor="let fa of responseDataL3[msid].VIEW[inputParameters.MONTH].REPORT"><span>{{ fa==2?'O':(fa==1?'P':'-') }}</span></td>
+        <td class=" total-pl-table">{{ this | lossCalculator:msid }}</td>
+        <td class="total-loss-table" [id]="calculateId(2,msid)">{{ this | lossCalculator:'ALL' }}</td>
+      </tr>
+
+    </table>
+
+  </div>
+
+</div>

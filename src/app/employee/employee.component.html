@@ -1,0 +1,74 @@
+<div class="user-container">
+<div class="user-list">
+  <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+    <mat-spinner></mat-spinner>
+</div>
+  <mat-table matSort (matSortChange) = "dataSource.sortData($event)" class="mat-elevation-z1 employee-table" [dataSource]="dataSource">
+    <ng-container matColumnDef="MSID">
+      <mat-header-cell mat-sort-header="MSID" *matHeaderCellDef>MSID</mat-header-cell>
+      <mat-cell *matCellDef="let user">{{user.MSID}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="NAME">
+      <mat-header-cell mat-sort-header="NAME" *matHeaderCellDef>NAME</mat-header-cell>
+      <mat-cell class="description-cell" *matCellDef="let user">{{user.NAME}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="EMAIL">
+      <mat-header-cell *matHeaderCellDef>EMAIL</mat-header-cell>
+      <mat-cell class="duration-cell" *matCellDef="let user">{{user.EMAIL}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="ACCOLITE_EMPLOYEE">
+      <mat-header-cell *matHeaderCellDef>ACCOLITE EMPLOYEE</mat-header-cell>
+      <mat-cell class="duration-cell" *matCellDef="let user">{{user.ACCOLITE_EMPLOYEE}}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="userListHeaders"></mat-header-row>
+    <mat-row *matRowDef="let row;columns: userListHeaders" (click)="onClickedUserRow(row)"></mat-row>
+  </mat-table>
+</div>
+<div *ngIf="!editViewActive" class="user-details">
+  <mat-card class="user-details-card">
+    <mat-card-title>{{ currentSelectedUserDetails.NAME }}</mat-card-title>
+    <mat-card-subtitle>{{ currentSelectedUserDetails.MSID }}</mat-card-subtitle>
+    <mat-card-content>
+      Accolite Employee : {{ currentSelectedUserDetails.ACCOLITE_EMPLOYEE }}<br>
+      Email : {{ currentSelectedUserDetails.EMAIL }}<br>
+    </mat-card-content>
+    <mat-card-actions class="action-container">
+      <button *ngIf="anyDataSelected" class="info" mat-button (click)="editHandler()">EDIT</button>
+      <button *ngIf="anyDataSelected" class="danger" mat-button >DEACTIVATE</button>
+    </mat-card-actions>
+
+  </mat-card>
+</div>
+
+  <div *ngIf="editViewActive" class="user-details">
+    <mat-card class="user-details-card">
+      <mat-card-title>{{currentSelectedUserDetails.NAME}} | {{currentSelectedUserDetails.MSID}}<br><br></mat-card-title>
+      <mat-card-subtitle><button mat-icon-button class="close-button" (click)="closeEditView()"><i class="fa fa-times"></i></button> </mat-card-subtitle>
+      <mat-card-content>
+        <mat-form-field>
+          <input matInput placeholder="MSID" [(ngModel)]="currentDirtyUser.MSID">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="NAME" [(ngModel)]="currentDirtyUser.NAME">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="EMAIL" [value]="currentDirtyUser.EMAIL">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput  placeholder="ACCOLITE ID" [value]="currentDirtyUser.ACCOLITE_EMPLOYEE">
+        </mat-form-field>
+      </mat-card-content>
+      <mat-card-actions class="action-container">
+        <button mat-raised-button class="info" (click)="editSaveHandler()">SAVE</button>
+        <button mat-raised-button class="danger" (click)="clearHandler()">CLEAR</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <button class="add-employee-fab" mat-fab (click)="addNewUser()">
+    <span class="fa fa-user-plus"></span>
+  </button>
+</div>

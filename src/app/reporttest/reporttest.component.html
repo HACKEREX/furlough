@@ -1,0 +1,75 @@
+<!--
+<div>
+  <mat-select [(value)]="inputParameters.TYPE" placeholder="INPUT TYPE">
+    <mat-option value={{0}}>YEARLY</mat-option>
+    <mat-option value={{1}}>QUATERLY</mat-option>
+    <mat-option value={{2}}>MONTHLY</mat-option>
+  </mat-select>
+  <mat-select [(value)]="inputParameters.YEAR" placeholder="YEAR">
+    <mat-option *ngFor="let year of yearList" value={{year}} >{{ year }}</mat-option>
+  </mat-select>
+  <mat-select [(value)]="inputParameters.MONTH" placeholder="MONTH">
+    <mat-option *ngFor="let month of monthHeaders" value={{monthHeadersMap[month]}} >{{ month }}</mat-option>
+  </mat-select>
+  <button class='command-view-button' type="button" (click)="refreshDetails()">FETCH</button>
+</div>-->
+
+<mat-grid-list cols="10" rowHeight="100px" class="command-view-container">
+  <mat-grid-tile [colspan]="3">
+    <mat-select [(value)]="inputParameters.TYPE" placeholder="INPUT TYPE">
+      <mat-option value={{0}}>YEARLY</mat-option>
+      <mat-option value={{1}}>QUATERLY</mat-option>
+      <mat-option value={{2}}>MONTHLY</mat-option>
+    </mat-select>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="3">
+    <mat-select [(value)]="inputParameters.YEAR" placeholder="YEAR">
+      <mat-option *ngFor="let year of yearList" value={{year}} >{{ year }}</mat-option>
+    </mat-select>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="3">
+    <mat-select [(value)]="inputParameters.MONTH" placeholder="MONTH">
+      <mat-option *ngFor="let month of monthHeaders" value={{monthHeadersMap[month]}} >{{ month }}</mat-option>
+    </mat-select>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1">
+    <button mat-raised-button color="primary" (click)="refreshDetails()">FETCH</button>
+  </mat-grid-tile>
+</mat-grid-list>
+<div *ngIf="!dataSource.monthView">
+  <mat-table class="mat-elevation-z1" [dataSource]="dataSource">
+    <ng-container *ngFor="let month of dataSource.dataHeaders" matColumnDef={{month}}>
+      <mat-header-cell *matHeaderCellDef (click)="handleMonthView(month)">
+        {{month}}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user">{{ user[month] }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="dataSource.dataHeaders"></mat-header-row>
+    <mat-row *matRowDef="let row;columns:dataSource.dataHeaders"></mat-row>
+  </mat-table>
+</div>
+<div *ngIf="dataSource.monthView">
+  <button class="back-button" mat-fab (click)="handleBack()"><span class="fa fa-reply"></span></button>
+  <mat-table class="mat-elevation-z1 month-table" [dataSource]="dataSource">
+    <ng-container *ngFor="let days of dataSource.monthDataHeaders" matColumnDef={{days}}>
+      <mat-header-cell *matHeaderCellDef>{{ days }}</mat-header-cell>
+      <mat-cell *matCellDef="let user">{{user[days]}}</mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="dataSource.monthDataHeaders"></mat-header-row>
+    <mat-row *matRowDef="let row;columns: dataSource.monthDataHeaders"></mat-row>
+  </mat-table>
+</div>
+<div class="navigator-right-left">
+  <button mat-fab (click)="handleLeft()"><span class="fa fa-chevron-left"></span></button>
+  <button mat-fab (click)="handleRight()"><span class="fa fa-chevron-right"></span></button>
+</div>
+
+<mat-toolbar class="footer" color="primary">
+  <div class="status-date">
+    Month: {{monthHeaders[inputParameters.MONTH]}} |
+    Year: {{inputParameters.YEAR}} |
+    Quarter: {{ inputParameters.QUARTER_VIEW.QUARTER_NUMBER }}
+  </div>
+  <div class="status-text">{{ dataSource.noData? 'NO DATA FOUND': '' }}</div>
+</mat-toolbar>

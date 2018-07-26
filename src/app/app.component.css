@@ -1,0 +1,10 @@
+.router-link-active::before {
+  content: '_';
+  color:white;
+  position:absolute;
+  bottom:-12px;
+  right:0px;
+  height:.3rem;
+  width:90%;
+  background-color:white;
+}

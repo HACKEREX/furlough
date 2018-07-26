@@ -1,0 +1,31 @@
+.navigator-right-left{
+  position: fixed;
+  right: 2rem;
+  bottom:2rem;
+}
+.navigator-right-left>button{
+  margin:1rem;
+}
+.command-view-container{
+  margin:1rem;
+}
+.back-button{
+  position: fixed;
+  left: 2rem;
+  bottom: 3rem;
+}
+
+.footer{
+  position: fixed;
+  bottom:0px;
+  height:40px;
+  font-size: 0.8rem;
+}
+
+.status-date{
+  float:left;
+}
+
+.status-text{
+  float:right;
+}

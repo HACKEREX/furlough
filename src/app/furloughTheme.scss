@@ -1,0 +1,9 @@
+@import '../../node_modules/@angular/material/theming';
+@include mat-core();
+
+$furlough-app-primary : mat-palette($mat-indigo);
+$furlough-app-accent : mat-palette($mat-pink,A200,A100,A400);
+$furlough-app-warn : mat-palette($mat-red);
+
+$furlough-app-theme: mat-light-theme($furlough-app-primary,$furlough-app-accent,$furlough-app-warn);
+@include angular-material-theme($furlough-app-theme);

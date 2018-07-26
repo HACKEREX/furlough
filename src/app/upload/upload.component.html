@@ -1,0 +1,47 @@
+<div class="file-container">
+  <div class="file-list">
+    <mat-table matSort (matSortChange) = "dataSource.sortData($event)" class="mat-elevation-z1" [dataSource]="dataSource">
+      <ng-container matColumnDef="NAME">
+        <mat-header-cell  *matHeaderCellDef>FILE NAME</mat-header-cell>
+        <mat-cell *matCellDef="let file">{{file.NAME}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="UPLOADED_AT">
+        <mat-header-cell *matHeaderCellDef>UPLOADED AT</mat-header-cell>
+        <mat-cell *matCellDef="let file">{{file.UPLOADED_AT}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="UPLOADED_BY">
+        <mat-header-cell *matHeaderCellDef>UPLOADED BY</mat-header-cell>
+        <mat-cell *matCellDef="let file">{{file.UPLOADED_BY}}</mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="fileListHeaders"></mat-header-row>
+      <mat-row *matRowDef="let row;columns: fileListHeaders" ></mat-row>
+
+    </mat-table>
+  </div>
+  <div class="file-upload">
+
+    <div>
+      <div class="content-wrapper content-wrapper--with-bg">
+        <h2 style="padding-left: 75px;"> Upload your file here...</h2>
+        <br/>
+
+        <form id="file-upload-form" class="uploader" (ngSubmit)="onSubmit()">
+
+          <label for="file-upload" id="file-drag">
+            <div id="start">
+              <i class="fa fa-download" aria-hidden="true"></i>
+              <br/>
+              <div style="padding-left: 40px;"><input id="file-upload" type="file" name="file" (change)="selectFile($event)"/></div>
+            </div>
+          </label>
+
+        </form>
+        <div style="padding-left: 75px;">
+          <button [disabled]="!selectedFiles" (click)="upload()" class="button button2">Upload</button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
